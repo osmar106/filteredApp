@@ -19,6 +19,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet var secondaryMenu: UIView!
     @IBOutlet var bottomMenu: UIView!
     
+    var originalImage: UIImage!
+    var currentImage: UIImage!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -34,11 +37,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     
+    //SHARE BUTTON
     @IBAction func onShare(sender: AnyObject) {
         let activityController = UIActivityViewController(activityItems: [imageView.image!], applicationActivities: nil) //IMPORTANT
         presentViewController(activityController, animated: true, completion: nil)
     }
 
+    
+    //NEW PHOTO BUTTON
     @IBAction func onNewPhoto(sender: AnyObject) {
         let actionSheet=UIAlertController(title: "New Photo", message: nil, preferredStyle: .ActionSheet)
         
@@ -74,7 +80,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         dismissViewControllerAnimated(true, completion: nil)
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            imageView.image = image
+            //imageView.image = image
+            setupNewImage(image)
         }
     }
     
@@ -82,6 +89,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         dismissViewControllerAnimated(true, completion: nil)
     }
 
+    
+    //FILTER BUTTON
     @IBAction func onFilter(sender: UIButton) {
         if(sender.selected){
             hideSecondaryMenu()
@@ -121,5 +130,122 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 }
         }
     }
+    
+    func setupNewImage(image: UIImage) {
+        // got a new image to filter, update state
+        hideSecondaryMenu()
+        //hideSliderMenu()
+        
+        imageView.image = image // display the selected image
+        self.originalImage = image // save the selected image for comparing against
+        
+        // disable comparisons and edits until image is filtered
+        //compareButton.enabled = false
+        //editButton.enabled = false
+    }
+    
+    //Filter Red
+    @IBAction func filterRed(sender: UIButton) {
+        if(sender.selected){
+            imageView.image = originalImage
+            sender.selected = false
+        }
+        else {
+            if self.originalImage == nil {
+                self.originalImage = imageView.image!
+            }
+            let image = processor.applyFilters(originalImage!, colorRed: 100, colorGreen: 0, colorBlue: 0, colorAlpha: 0, colorGray: 0, colorContrast: 0)
+            imageView.image = image
+            
+            sender.selected = true
+        }
+    }
+    
+    //Filter Green
+    @IBAction func filterGreen(sender: UIButton) {
+        if(sender.selected){
+            imageView.image = originalImage
+            sender.selected = false
+        }
+        else {
+            if self.originalImage == nil {
+                self.originalImage = imageView.image!
+            }
+            let image = processor.applyFilters(originalImage!, colorRed: 0, colorGreen: 100, colorBlue: 0, colorAlpha: 0, colorGray: 0, colorContrast: 0)
+            imageView.image = image
+            
+            sender.selected = true
+        }
+    }
+    
+    //Filter Blue
+    @IBAction func filterBlue(sender: UIButton) {
+        if(sender.selected){
+            imageView.image = originalImage
+            sender.selected = false
+        }
+        else {
+            if self.originalImage == nil {
+                self.originalImage = imageView.image!
+            }
+            let image = processor.applyFilters(originalImage!, colorRed: 0, colorGreen: 0, colorBlue: 100, colorAlpha: 0, colorGray: 0, colorContrast: 0)
+            imageView.image = image
+            
+            sender.selected = true
+        }
+    }
+    
+    //Filter Gray
+    @IBAction func filterGray(sender: UIButton) {
+        if(sender.selected){
+            imageView.image = originalImage
+            sender.selected = false
+        }
+        else {
+            if self.originalImage == nil {
+                self.originalImage = imageView.image!
+            }
+            let image = processor.applyFilters(originalImage!, colorRed: 0, colorGreen: 0, colorBlue: 0, colorAlpha: 0, colorGray: 100, colorContrast: 0)
+            imageView.image = image
+            
+            sender.selected = true
+        }
+    }
+    
+    //Filter Contrast
+    @IBAction func filterContrast(sender: UIButton) {
+        if(sender.selected){
+            imageView.image = originalImage
+            sender.selected = false
+        }
+        else {
+            if self.originalImage == nil {
+                self.originalImage = imageView.image!
+            }
+            let image = processor.applyFilters(originalImage!, colorRed: 0, colorGreen: 0, colorBlue: 0, colorAlpha: 0, colorGray: 0, colorContrast: 100)
+            imageView.image = image
+            
+            sender.selected = true
+        }
+    }
+
+    
+    @IBAction func onCompare(sender: UIButton) {
+        if(sender.selected){
+            imageView.image = currentImage
+            sender.selected = false
+        }
+        else {
+            if self.currentImage == nil {
+                self.currentImage = imageView.image!
+            }
+            let image = originalImage
+            imageView.image = image
+            
+            sender.selected = true
+        }
+    }
+    
+    
 }
 
