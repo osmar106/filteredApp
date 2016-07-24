@@ -59,7 +59,7 @@
                                                     <action selector="onFilter:" destination="BYZ-38-t0r" eventType="touchUpInside" id="YXV-GS-fgh"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fHa-xC-Bvf">
+                                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fHa-xC-Bvf">
                                                 <rect key="frame" x="300" y="0.0" width="150" height="44"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="44" id="CnN-26-cY3"/>
@@ -117,6 +117,7 @@
                     </view>
                     <connections>
                         <outlet property="bottomMenu" destination="slL-cx-guS" id="aXu-Hc-awM"/>
+                        <outlet property="compareButton" destination="fHa-xC-Bvf" id="lCU-wh-yVO"/>
                         <outlet property="filterButton" destination="RYr-CS-K26" id="szx-MC-vU6"/>
                         <outlet property="imageView" destination="O9h-Zm-q17" id="gTd-07-Dga"/>
                         <outlet property="secondaryMenu" destination="g5T-MK-3AM" id="7vm-Kk-qls"/>

@@ -17,10 +17,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet var filterButton: UIButton!
     
     @IBOutlet var secondaryMenu: UIView!
+    
     @IBOutlet var bottomMenu: UIView!
+    
+    @IBOutlet var compareButton: UIButton!
+    
     
     var originalImage: UIImage!
     var currentImage: UIImage!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -140,7 +145,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         self.originalImage = image // save the selected image for comparing against
         
         // disable comparisons and edits until image is filtered
-        //compareButton.enabled = false
         //editButton.enabled = false
     }
     
@@ -149,6 +153,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         if(sender.selected){
             imageView.image = originalImage
             sender.selected = false
+            compareButton.enabled = false
         }
         else {
             if self.originalImage == nil {
@@ -156,7 +161,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             }
             let image = processor.applyFilters(originalImage!, colorRed: 100, colorGreen: 0, colorBlue: 0, colorAlpha: 0, colorGray: 0, colorContrast: 0)
             imageView.image = image
-            
+            compareButton.enabled = true
             sender.selected = true
         }
     }
@@ -166,6 +171,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         if(sender.selected){
             imageView.image = originalImage
             sender.selected = false
+            compareButton.enabled = false
         }
         else {
             if self.originalImage == nil {
@@ -173,7 +179,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             }
             let image = processor.applyFilters(originalImage!, colorRed: 0, colorGreen: 100, colorBlue: 0, colorAlpha: 0, colorGray: 0, colorContrast: 0)
             imageView.image = image
-            
+            compareButton.enabled = true
             sender.selected = true
         }
     }
@@ -183,6 +189,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         if(sender.selected){
             imageView.image = originalImage
             sender.selected = false
+            compareButton.enabled = false
         }
         else {
             if self.originalImage == nil {
@@ -190,7 +197,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             }
             let image = processor.applyFilters(originalImage!, colorRed: 0, colorGreen: 0, colorBlue: 100, colorAlpha: 0, colorGray: 0, colorContrast: 0)
             imageView.image = image
-            
+            compareButton.enabled = true
             sender.selected = true
         }
     }
@@ -200,6 +207,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         if(sender.selected){
             imageView.image = originalImage
             sender.selected = false
+            compareButton.enabled = false
         }
         else {
             if self.originalImage == nil {
@@ -207,7 +215,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             }
             let image = processor.applyFilters(originalImage!, colorRed: 0, colorGreen: 0, colorBlue: 0, colorAlpha: 0, colorGray: 100, colorContrast: 0)
             imageView.image = image
-            
+            compareButton.enabled = true
             sender.selected = true
         }
     }
@@ -217,6 +225,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         if(sender.selected){
             imageView.image = originalImage
             sender.selected = false
+            compareButton.enabled = false
         }
         else {
             if self.originalImage == nil {
@@ -224,7 +233,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             }
             let image = processor.applyFilters(originalImage!, colorRed: 0, colorGreen: 0, colorBlue: 0, colorAlpha: 0, colorGray: 0, colorContrast: 100)
             imageView.image = image
-            
+            compareButton.enabled = true
             sender.selected = true
         }
     }
