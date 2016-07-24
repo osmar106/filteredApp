@@ -152,6 +152,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBAction func filterRed(sender: UIButton) {
         if(sender.selected){
             imageView.image = originalImage
+            crossFadeToImage(imageView.image!)
             sender.selected = false
             compareButton.enabled = false
         }
@@ -161,6 +162,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             }
             let image = processor.applyFilters(originalImage!, colorRed: 100, colorGreen: 0, colorBlue: 0, colorAlpha: 0, colorGray: 0, colorContrast: 0)
             imageView.image = image
+            crossFadeToImage(imageView.image!)
             compareButton.enabled = true
             sender.selected = true
         }
@@ -170,6 +172,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBAction func filterGreen(sender: UIButton) {
         if(sender.selected){
             imageView.image = originalImage
+            crossFadeToImage(imageView.image!)
             sender.selected = false
             compareButton.enabled = false
         }
@@ -179,6 +182,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             }
             let image = processor.applyFilters(originalImage!, colorRed: 0, colorGreen: 100, colorBlue: 0, colorAlpha: 0, colorGray: 0, colorContrast: 0)
             imageView.image = image
+            crossFadeToImage(imageView.image!)
             compareButton.enabled = true
             sender.selected = true
         }
@@ -188,6 +192,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBAction func filterBlue(sender: UIButton) {
         if(sender.selected){
             imageView.image = originalImage
+            crossFadeToImage(imageView.image!)
             sender.selected = false
             compareButton.enabled = false
         }
@@ -197,6 +202,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             }
             let image = processor.applyFilters(originalImage!, colorRed: 0, colorGreen: 0, colorBlue: 100, colorAlpha: 0, colorGray: 0, colorContrast: 0)
             imageView.image = image
+            crossFadeToImage(imageView.image!)
             compareButton.enabled = true
             sender.selected = true
         }
@@ -206,6 +212,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBAction func filterGray(sender: UIButton) {
         if(sender.selected){
             imageView.image = originalImage
+            crossFadeToImage(imageView.image!)
             sender.selected = false
             compareButton.enabled = false
         }
@@ -215,6 +222,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             }
             let image = processor.applyFilters(originalImage!, colorRed: 0, colorGreen: 0, colorBlue: 0, colorAlpha: 0, colorGray: 100, colorContrast: 0)
             imageView.image = image
+            crossFadeToImage(imageView.image!)
             compareButton.enabled = true
             sender.selected = true
         }
@@ -224,6 +232,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBAction func filterContrast(sender: UIButton) {
         if(sender.selected){
             imageView.image = originalImage
+            crossFadeToImage(imageView.image!)
             sender.selected = false
             compareButton.enabled = false
         }
@@ -233,6 +242,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             }
             let image = processor.applyFilters(originalImage!, colorRed: 0, colorGreen: 0, colorBlue: 0, colorAlpha: 0, colorGray: 0, colorContrast: 100)
             imageView.image = image
+            crossFadeToImage(imageView.image!)
             compareButton.enabled = true
             sender.selected = true
         }
@@ -243,15 +253,19 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBAction func onCompare(sender: UIButton) {
         if(sender.selected){
             imageView.image = currentImage
+            crossFadeToImage(imageView.image!)
             sender.selected = false
         }
         else {
             if self.currentImage == nil {
                 self.currentImage = imageView.image!
             }
-            let image = originalImage
-            imageView.image = image
+//            let image = originalImage
+//            imageView.image = image
             
+            let labeledImage = addTextToImage("original", inImage: originalImage, atPoint: CGPointMake(0, 0))
+            imageView.image = labeledImage
+            crossFadeToImage(imageView.image!)
             sender.selected = true
         }
     }
@@ -282,9 +296,51 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     
-    //"ORIGINAL" MESSAGE
+    //"ORIGINAL" MESSAGE from http://stackoverflow.com/questions/28906914/how-do-i-add-text-to-an-image-in-ios-swift
+    func addTextToImage(drawText: NSString, inImage: UIImage, atPoint:CGPoint)->UIImage{
+        
+        // Setup the font specific variables
+        let textColor: UIColor = UIColor.purpleColor()
+        // calculate the overlay font size, otherwise for high-res images it will be too small,
+        // and for low-res images it will be too huge.
+        let fontSize: Int = Int(floorf(Float(inImage.size.width) / 5.0))
+        let textFont: UIFont = UIFont(name: "Helvetica Bold", size: CGFloat(fontSize))!
+        
+        //Setup the image context using the passed image.
+        UIGraphicsBeginImageContext(inImage.size)
+        
+        //Setups up the font attributes that will be later used to dictate how the text should be drawn
+        let textFontAttributes = [
+            NSFontAttributeName: textFont,
+            NSForegroundColorAttributeName: textColor,
+            
+            ]
+        
+        //Put the image into a rectangle as large as the original image.
+        inImage.drawInRect(CGRectMake(0, 0, inImage.size.width, inImage.size.height))
+        
+        // Creating a point within the space that is as bit as the image.
+        let rect: CGRect = CGRectMake(atPoint.x, atPoint.y, inImage.size.width, inImage.size.height)
+        
+        //Now Draw the text into an image.
+        drawText.drawInRect(rect, withAttributes: textFontAttributes)
+        
+        // Create a new image out of the images we have created
+        let newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()
+        
+        // End the context now that we have the image we need
+        UIGraphicsEndImageContext()
+        
+        //And pass it back up to the caller.
+        return newImage
+        
+    }
     
     
+    //CROSS-FADE based on http://stackoverflow.com/questions/7638831/fade-dissolve-when-changing-uiimageviews-image
+    func crossFadeToImage(image: UIImage) {
+        UIView.transitionWithView(imageView, duration:1, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: { self.imageView.image = image}, completion: nil)
+    }
     
 }
 
