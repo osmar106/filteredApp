@@ -33,7 +33,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         secondaryMenu.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.5)
         secondaryMenu.translatesAutoresizingMaskIntoConstraints = false
-
+        imageView.userInteractionEnabled = true;
     }
 
     override func didReceiveMemoryWarning() {
@@ -239,6 +239,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
 
     
+    //COMPARE BUTTON
     @IBAction func onCompare(sender: UIButton) {
         if(sender.selected){
             imageView.image = currentImage
@@ -254,6 +255,35 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             sender.selected = true
         }
     }
+    
+    
+    // MARK: UIResponder methods (from Week5 forums)
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        let touch: UITouch? = touches.first
+        if touch?.view == imageView {
+            // print("imageView is been tapped by the user.")
+            if self.currentImage == nil {
+                self.currentImage = imageView.image!
+            }
+            let image = originalImage
+            imageView.image = image
+        }
+        super.touchesBegan(touches, withEvent: event)
+        
+    }
+    
+    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        let touch: UITouch? = touches.first
+        if touch?.view == imageView {
+            // print("imageView has been tapped by the user.")
+            imageView.image = currentImage
+        }
+        super.touchesEnded(touches, withEvent: event)
+    }
+    
+    
+    //"ORIGINAL" MESSAGE
+    
     
     
 }
