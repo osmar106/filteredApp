@@ -22,6 +22,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     @IBOutlet var compareButton: UIButton!
     
+    @IBOutlet var editSlider: UISlider!
+    
+    @IBOutlet var editButton: UIButton!
+    
+    @IBOutlet var sliderMenu: UIView!
     
     var originalImage: UIImage!
     var currentImage: UIImage!
@@ -33,6 +38,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         secondaryMenu.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.5)
         secondaryMenu.translatesAutoresizingMaskIntoConstraints = false
+        sliderMenu.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.5)
+        sliderMenu.translatesAutoresizingMaskIntoConstraints = false
         imageView.userInteractionEnabled = true;
     }
 
@@ -154,16 +161,18 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             imageView.image = originalImage
             crossFadeToImage(imageView.image!)
             sender.selected = false
+            editButton.enabled = false
             compareButton.enabled = false
         }
         else {
             if self.originalImage == nil {
                 self.originalImage = imageView.image!
             }
-            let image = processor.applyFilters(originalImage!, colorRed: 100, colorGreen: 0, colorBlue: 0, colorAlpha: 0, colorGray: 0, colorContrast: 0)
+            let image = processor.applyFilters(originalImage!, colorRed: UInt8(editSlider.value), colorGreen: 0, colorBlue: 0, colorAlpha: 0, colorGray: 0, colorContrast: 0)
             imageView.image = image
             crossFadeToImage(imageView.image!)
             compareButton.enabled = true
+            editButton.enabled = true
             sender.selected = true
         }
     }
@@ -174,16 +183,18 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             imageView.image = originalImage
             crossFadeToImage(imageView.image!)
             sender.selected = false
+            editButton.enabled = false
             compareButton.enabled = false
         }
         else {
             if self.originalImage == nil {
                 self.originalImage = imageView.image!
             }
-            let image = processor.applyFilters(originalImage!, colorRed: 0, colorGreen: 100, colorBlue: 0, colorAlpha: 0, colorGray: 0, colorContrast: 0)
+            let image = processor.applyFilters(originalImage!, colorRed: 0, colorGreen: UInt8(editSlider.value), colorBlue: 0, colorAlpha: 0, colorGray: 0, colorContrast: 0)
             imageView.image = image
             crossFadeToImage(imageView.image!)
             compareButton.enabled = true
+            editButton.enabled = true
             sender.selected = true
         }
     }
@@ -194,15 +205,17 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             imageView.image = originalImage
             crossFadeToImage(imageView.image!)
             sender.selected = false
+            editButton.enabled = false
             compareButton.enabled = false
         }
         else {
             if self.originalImage == nil {
                 self.originalImage = imageView.image!
             }
-            let image = processor.applyFilters(originalImage!, colorRed: 0, colorGreen: 0, colorBlue: 100, colorAlpha: 0, colorGray: 0, colorContrast: 0)
+            let image = processor.applyFilters(originalImage!, colorRed: 0, colorGreen: 0, colorBlue: UInt8(editSlider.value), colorAlpha: 0, colorGray: 0, colorContrast: 0)
             imageView.image = image
             crossFadeToImage(imageView.image!)
+            editButton.enabled = true
             compareButton.enabled = true
             sender.selected = true
         }
@@ -214,16 +227,18 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             imageView.image = originalImage
             crossFadeToImage(imageView.image!)
             sender.selected = false
+            editButton.enabled = false
             compareButton.enabled = false
         }
         else {
             if self.originalImage == nil {
                 self.originalImage = imageView.image!
             }
-            let image = processor.applyFilters(originalImage!, colorRed: 0, colorGreen: 0, colorBlue: 0, colorAlpha: 0, colorGray: 100, colorContrast: 0)
+            let image = processor.applyFilters(originalImage!, colorRed: 0, colorGreen: 0, colorBlue: 0, colorAlpha: 0, colorGray: UInt8(editSlider.value), colorContrast: 0)
             imageView.image = image
             crossFadeToImage(imageView.image!)
             compareButton.enabled = true
+            editButton.enabled = true
             sender.selected = true
         }
     }
@@ -234,16 +249,18 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             imageView.image = originalImage
             crossFadeToImage(imageView.image!)
             sender.selected = false
+            editButton.enabled = false
             compareButton.enabled = false
         }
         else {
             if self.originalImage == nil {
                 self.originalImage = imageView.image!
             }
-            let image = processor.applyFilters(originalImage!, colorRed: 0, colorGreen: 0, colorBlue: 0, colorAlpha: 0, colorGray: 0, colorContrast: 100)
+            let image = processor.applyFilters(originalImage!, colorRed: 0, colorGreen: 0, colorBlue: 0, colorAlpha: 0, colorGray: 0, colorContrast: UInt8(editSlider.value))
             imageView.image = image
             crossFadeToImage(imageView.image!)
             compareButton.enabled = true
+            editButton.enabled = true
             sender.selected = true
         }
     }
@@ -341,6 +358,51 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func crossFadeToImage(image: UIImage) {
         UIView.transitionWithView(imageView, duration:1, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: { self.imageView.image = image}, completion: nil)
     }
+    
+    
+    //EDIT BUTTON - SLIDER
+    @IBAction func onEdit(sender: UIButton) {
+        if(sender.selected){
+            hideSliderMenu()
+            sender.selected = false
+        }
+        else {
+            showSliderMenu()
+            sender.selected = true
+        }
+        //view.addSubview(sliderMenu)
+    }
+    
+    func showSliderMenu() {
+        view.addSubview(sliderMenu)
+        
+        let bottomConstraint = sliderMenu.bottomAnchor.constraintEqualToAnchor(secondaryMenu.topAnchor)
+        let leftConstraint = sliderMenu.leftAnchor.constraintEqualToAnchor(view.leftAnchor)
+        let rightConstraint = sliderMenu.rightAnchor.constraintEqualToAnchor(view.rightAnchor)
+        let heightConstraint = sliderMenu.heightAnchor.constraintGreaterThanOrEqualToConstant(31)
+        
+        NSLayoutConstraint.activateConstraints([bottomConstraint, leftConstraint, rightConstraint, heightConstraint])
+        
+        view.layoutIfNeeded()
+        
+        self.sliderMenu.alpha = 0
+        UIView.animateWithDuration(0.4) {
+            self.sliderMenu.alpha = 1.0
+        }
+    }
+    
+    func hideSliderMenu() {
+        UIView.animateWithDuration(0.4, animations: {
+            self.sliderMenu.alpha = 0.4
+        }) { (completed) in
+            if completed == true {
+                self.sliderMenu.removeFromSuperview()
+            }
+        }
+    }
+    
+    
+    
     
 }
 
